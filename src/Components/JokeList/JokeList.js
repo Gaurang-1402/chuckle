@@ -24,16 +24,28 @@ class JokeList extends Component {
 
       console.log(res.data.joke)
     }
-    this.setState({jokes: jokes})
+    this.setState({ jokes: jokes })
   }
 
   render() {
-    return <div>
-    <h1>Chuckle</h1>
+    return (
+      <div className='JokeList'>
+        <div className='JokeList-sidebar'>
+          <h1 className='JokeList-title'>
+            <span>Chuckle</span>
+          </h1>
+          <img src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg' />
+          <button className='JokeList-getmore'>New Jokes</button>
+        </div>
 
-    {this.state.jokes.map((j) => (<div>{j}</div>))}
+        <div className="JokeList-jokes">
 
-    </div>
+        {this.state.jokes.map((j) => (
+          <div >{j}</div>
+        ))}
+        </div>
+      </div>
+    )
   }
 }
 
