@@ -10,11 +10,17 @@ class JokeList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      jokes: [],
+      jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
     }
+    this.handleClick = this.handleClick.bind(this)
+    this.clearJokes = this.clearJokes.bind(this)
   }
 
   async componentDidMount() {
+    if (this.state.jokes.length === 0) this.getJokes()
+  }
+
+  async getJokes() {
     let jokes = []
 
     while (jokes.length < this.props.numJokes) {
@@ -24,17 +30,30 @@ class JokeList extends Component {
 
       jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
     }
-    this.setState({ jokes: jokes })
+    this.setState((currState) => ({ jokes: [...currState.jokes, ...jokes] }))
+
+    window.localStorage.setItem("jokes", JSON.stringify(jokes))
   }
 
   handleVotes(id, delta) {
-    this.setState((currState) => ({
-      jokes: currState.jokes.map((j) =>
-        j.id === id ? { ...j, votes: j.votes + delta } : j
-      ),
-    }))
+    this.setState(
+      (currState) => ({
+        jokes: currState.jokes.map((j) =>
+          j.id === id ? { ...j, votes: j.votes + delta } : j
+        ),
+      }),
+      () =>
+        window.localStorage.setItem("jokes", JSON.stringify(this.state.jokes))
+    )
   }
 
+  handleClick() {
+    this.getJokes()
+  }
+
+  clearJokes() {
+    window.localStorage.clear()
+  }
   render() {
     return (
       <div className='JokeList'>
@@ -43,13 +62,17 @@ class JokeList extends Component {
             <span>Chuckle</span>
           </h1>
           <img src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg' />
-          <button className='JokeList-getmore'>New Jokes</button>
+          <button onClick={this.handleClick} className='JokeList-getmore'>
+            New Jokes
+          </button>
+
+          <button onClick={this.clearJokes}>Clear jokes</button>
         </div>
 
         <div className='JokeList-jokes'>
           {this.state.jokes.map((j) => (
             <Joke
-              id={j.id}
+              key={j.id}
               text={j.text}
               votes={j.votes}
               downVote={() => this.handleVotes(j.id, -1)}
