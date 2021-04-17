@@ -40,7 +40,6 @@ class JokeList extends Component {
 
       }
 
-      jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
     }
     this.setState((currState) => ({
       loading: false,
@@ -97,7 +96,7 @@ class JokeList extends Component {
         </div>
 
         <div className='JokeList-jokes'>
-          {this.state.jokes.map((j) => (
+          {this.state.jokes.sort((a, b) => b.votes-a.votes).map((j) => (
             <Joke
               key={j.id}
               text={j.text}
