@@ -92,7 +92,7 @@ class JokeList extends Component {
             New Jokes
           </button>
 
-          <button onClick={this.clearJokes}>Clear jokes</button>
+          <button className='JokeList-clearjokes' onClick={this.clearJokes}>Clear jokes</button>
         </div>
 
         <div className='JokeList-jokes'>
