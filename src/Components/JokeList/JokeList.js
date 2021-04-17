@@ -5,7 +5,7 @@ import Joke from "../Joke/Joke"
 import uuid from "uuid/v4"
 
 class JokeList extends Component {
-  static defaultProps = { numJokes: 10 }
+  static defaultProps = { numJokes: 30 }
 
   constructor(props) {
     super(props)
@@ -13,6 +13,8 @@ class JokeList extends Component {
       jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
       loading: false,
     }
+    this.seenJokes = new Set(this.state.jokes.map(joke => joke.text));
+    console.log(this.seenJokes);
     this.handleClick = this.handleClick.bind(this)
   }
 
@@ -21,12 +23,22 @@ class JokeList extends Component {
   }
 
   async getJokes() {
+      try {
     let jokes = []
 
     while (jokes.length < this.props.numJokes) {
       let res = await axios.get("https://icanhazdadjoke.com/", {
         headers: { Accept: "application/json" },
       })
+
+      if (!this.seenJokes.has(res.data.joke)) {
+      jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
+
+      } else { 
+          console.log("Found a duplicate!");
+          console.log(res.data.Joke);
+
+      }
 
       jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
     }
@@ -36,6 +48,10 @@ class JokeList extends Component {
     }))
 
     window.localStorage.setItem("jokes", JSON.stringify(jokes))
+} catch(e){
+    alert(e)
+    this.setState({loading: false})
+}
   }
 
   handleVotes(id, delta) {
