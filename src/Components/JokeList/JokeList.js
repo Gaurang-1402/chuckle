@@ -22,7 +22,7 @@ class JokeList extends Component {
         headers: { Accept: "application/json" },
       })
 
-      jokes.push({id: uuid(), text: res.data.joke, votes: 0 })
+      jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
     }
     this.setState({ jokes: jokes })
   }
@@ -48,7 +48,13 @@ class JokeList extends Component {
 
         <div className='JokeList-jokes'>
           {this.state.jokes.map((j) => (
-            <Joke id = {j.id} text={j.text} votes={j.votes} downVote = {() => this.handleVotes(j.id, -1)} upVote = {() => this.handleVotes(j.id, 1)} ></Joke>
+            <Joke
+              id={j.id}
+              text={j.text}
+              votes={j.votes}
+              downVote={() => this.handleVotes(j.id, -1)}
+              upVote={() => this.handleVotes(j.id, 1)}
+            ></Joke>
           ))}
         </div>
       </div>
