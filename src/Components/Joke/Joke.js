@@ -43,7 +43,7 @@ class Joke extends Component {
           <i className='fas fa-arrow-up' onClick={this.props.upVote}></i>
           <span
             className='Joke-votes'
-            style={{ borderColor: this.getColor() }}
+            style={{ borderColor: "#66FcF1"}}
           >{this.props.votes}</span>
           <i className='fas fa-arrow-down' onClick={this.props.downVote}></i>
         </div>

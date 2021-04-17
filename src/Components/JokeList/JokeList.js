@@ -13,9 +13,10 @@ class JokeList extends Component {
       jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
       loading: false,
     }
-    this.seenJokes = new Set(this.state.jokes.map(joke => joke.text));
-    console.log(this.seenJokes);
+    this.seenJokes = new Set(this.state.jokes.map((joke) => joke.text))
+    console.log(this.seenJokes)
     this.handleClick = this.handleClick.bind(this)
+    this.clearJokes = this.clearJokes.bind(this)
   }
 
   async componentDidMount() {
@@ -23,34 +24,31 @@ class JokeList extends Component {
   }
 
   async getJokes() {
-      try {
-    let jokes = []
+    try {
+      let jokes = []
 
-    while (jokes.length < this.props.numJokes) {
-      let res = await axios.get("https://icanhazdadjoke.com/", {
-        headers: { Accept: "application/json" },
-      })
+      while (jokes.length < this.props.numJokes) {
+        let res = await axios.get("https://icanhazdadjoke.com/", {
+          headers: { Accept: "application/json" },
+        })
 
-      if (!this.seenJokes.has(res.data.joke)) {
-      jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
-
-      } else { 
-          console.log("Found a duplicate!");
-          console.log(res.data.Joke);
-
+        if (!this.seenJokes.has(res.data.joke)) {
+          jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
+        } else {
+          console.log("Found a duplicate!")
+          console.log(res.data.Joke)
+        }
       }
+      this.setState((currState) => ({
+        loading: false,
+        jokes: [...currState.jokes, ...jokes],
+      }))
 
+      window.localStorage.setItem("jokes", JSON.stringify(jokes))
+    } catch (e) {
+      alert(e)
+      this.setState({ loading: false })
     }
-    this.setState((currState) => ({
-      loading: false,
-      jokes: [...currState.jokes, ...jokes],
-    }))
-
-    window.localStorage.setItem("jokes", JSON.stringify(jokes))
-} catch(e){
-    alert(e)
-    this.setState({loading: false})
-}
   }
 
   handleVotes(id, delta) {
@@ -71,6 +69,8 @@ class JokeList extends Component {
 
   clearJokes() {
     window.localStorage.clear()
+    this.setState({ loading: true })
+    window.location.reload()
   }
   render() {
     if (this.state.loading) {
@@ -92,20 +92,25 @@ class JokeList extends Component {
             New Jokes
           </button>
 
-          <button className='JokeList-clearjokes' onClick={this.clearJokes}>Clear jokes</button>
+          <button className='JokeList-clearjokes' onClick={this.clearJokes}>
+            Clear jokes
+          </button>
         </div>
 
-        <div className='JokeList-jokes'>
-          {this.state.jokes.sort((a, b) => b.votes-a.votes).map((j) => (
-            <Joke
-              key={j.id}
-              text={j.text}
-              votes={j.votes}
-              downVote={() => this.handleVotes(j.id, -1)}
-              upVote={() => this.handleVotes(j.id, 1)}
-            ></Joke>
-          ))}
+        <div id='style-14' className='JokeList-jokes'>
+          {this.state.jokes
+            .sort((a, b) => b.votes - a.votes)
+            .map((j) => (
+              <Joke
+                key={j.id}
+                text={j.text}
+                votes={j.votes}
+                downVote={() => this.handleVotes(j.id, -1)}
+                upVote={() => this.handleVotes(j.id, 1)}
+              ></Joke>
+            ))}
         </div>
+        <div data-simplebar></div>
       </div>
     )
   }
