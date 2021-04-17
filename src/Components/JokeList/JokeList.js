@@ -11,9 +11,9 @@ class JokeList extends Component {
     super(props)
     this.state = {
       jokes: JSON.parse(window.localStorage.getItem("jokes") || "[]"),
+      loading: false,
     }
     this.handleClick = this.handleClick.bind(this)
-    this.clearJokes = this.clearJokes.bind(this)
   }
 
   async componentDidMount() {
@@ -30,7 +30,10 @@ class JokeList extends Component {
 
       jokes.push({ id: uuid(), text: res.data.joke, votes: 0 })
     }
-    this.setState((currState) => ({ jokes: [...currState.jokes, ...jokes] }))
+    this.setState((currState) => ({
+      loading: false,
+      jokes: [...currState.jokes, ...jokes],
+    }))
 
     window.localStorage.setItem("jokes", JSON.stringify(jokes))
   }
@@ -48,13 +51,21 @@ class JokeList extends Component {
   }
 
   handleClick() {
-    this.getJokes()
+    this.setState({ loading: true }, this.getJokes)
   }
 
   clearJokes() {
     window.localStorage.clear()
   }
   render() {
+    if (this.state.loading) {
+      return (
+        <div className='JokeList-spinner'>
+          <i className='far fa-8x fa-laugh fa-spin'></i>
+          <h1 className='JokeList-title'>Loading...</h1>
+        </div>
+      )
+    }
     return (
       <div className='JokeList'>
         <div className='JokeList-sidebar'>
