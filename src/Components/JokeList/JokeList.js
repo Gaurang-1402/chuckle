@@ -65,6 +65,7 @@ class JokeList extends Component {
 
   handleClick() {
     this.setState({ loading: true }, this.getJokes)
+    alert("Scroll down to find the new jokes added!")
   }
 
   clearJokes() {
@@ -87,14 +88,17 @@ class JokeList extends Component {
           <h1 className='JokeList-title'>
             <span>Chuckle</span>
           </h1>
+          <p className='JokeList-p'>Everyone can improve their sense of humor with practice😉</p>
+
           <img alt='' src='https://assets.dryicons.com/uploads/icon/svg/8927/0eb14c71-38f2-433a-bfc8-23d9c99b3647.svg' />
           <button onClick={this.handleClick} className='JokeList-getmore'>
-            New Jokes
+            Additional Jokes
           </button>
 
           <button className='JokeList-clearjokes' onClick={this.clearJokes}>
-            Clear jokes
+            Clear dashboard and get new jokes
           </button>
+          <p>Made by Gaurang Ruparelia</p>
         </div>
 
         <div id='style-14' className='JokeList-jokes'>
@@ -110,7 +114,7 @@ class JokeList extends Component {
               ></Joke>
             ))}
         </div>
-        <div data-simplebar></div>
+
       </div>
     )
   }

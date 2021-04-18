@@ -18,8 +18,9 @@
 }
 
 .JokeList-title {
+  padding-top: 30px;
   font-size: 4rem;
-  margin: 2rem;
+  margin: 1rem;
   color: #66fcf1;
   font-weight: 300;
   letter-spacing: 0.6rem;
@@ -74,7 +75,10 @@
 }
 
 
-
+.JokeList-p {
+  color: #66fcf1;
+  font-size: 1.5rem;
+}
 .JokeList-spinner {
   color: white;
   text-align: center;
